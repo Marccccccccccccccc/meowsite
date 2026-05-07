@@ -1,0 +1,1031 @@
+---
+type ImageModule = { default: { src: string; width: number; height: number } };
+const allCatModules = import.meta.glob<ImageModule>('../assets/neocats/*.png', {eager: true});
+
+const cats = Object.entries(allCatModules).map(([path, mod]) => {
+    const filename = path.split('/').pop() || '';
+    const raw = filename.replace(/^neocat_?/, '').replace('.png', '');
+    const name = raw ? raw.replace(/_/g, ' ') : 'neocat';
+    return {src: mod.default.src, name, filename};
+});
+
+const catFacts = [
+    "The group of words associated with cat (catt, cath, chat, katze) stem from the Latin catus, meaning domestic cat, as opposed to feles, or wild cat.",
+    "When a cats rubs up against you, the cat is marking you with it's scent claiming ownership.",
+    "When a family cat died in ancient Egypt, family members would mourn by shaving off their eyebrows. They also held elaborate funerals during which they drank wine and beat their breasts. The cat was embalmed with a sculpted wooden mask and the tiny mummy was placed in the family tomb or in a pet cemetery with tiny mummies of mice.",
+];
+
+const stretch = Object.fromEntries(
+    cats
+        .filter(c => c.filename.startsWith('neocat_stretch_'))
+        .map(c => [c.filename.replace('neocat_stretch_', '').replace('.png', ''), c.src])
+);
+
+const snakeLayout: [number, number, string][] = [
+    [1, 1, 'right'],
+    [2, 1, 'h'],
+    [3, 1, 'h'],
+    [4, 1, 'h'],
+    [5, 1, 'h'],
+    [6, 1, 'h'],
+    [7, 1, 'h'],
+    [8, 1, 'h'],
+    [9, 1, 'h'],
+    [10, 1, 'ul'],
+    [10, 2, 'v'],
+    [10, 3, 'dl'],
+    [9, 3, 'h'],
+    [8, 3, 'h'],
+    [7, 3, 'h'],
+    [6, 3, 'h'],
+    [5, 3, 'h'],
+    [4, 3, 'h'],
+    [3, 3, 'h'],
+    [2, 3, 'h'],
+    [1, 3, 'dr'],
+    [1, 2, 'down']
+];
+
+const flyingCatDefs = [
+	{ file: 'neocat_happy.png',   dur: 2.8, delay: 0     },
+	{file: 'neocat_blush.png',   dur: 2.2, delay: -0.5  },
+	{ file: 'neocat_heart.png',   dur: 3.1, delay: -1.1  },
+	{ file: 'neocat_uwu.png',     dur: 2.5, delay: -1.8  },
+	{ file: 'neocat_rainbow.png', dur: 3.4, delay: -0.9 },
+	{ file: 'neocat_cool.png',    dur: 2.0, delay: -2.3  },
+];
+const flyingCats = flyingCatDefs.map(d => ({
+	...d,
+	cat: cats.find(c => c.filename === d.file),
+})).filter(d => d.cat);
+
+const heroOptions = ['neocat_happy.png', 'neocat_heart.png', 'neocat_uwu.png', 'neocat_rainbow.png', 'neocat_blush.png'];
+const hero = cats.find(c => c.filename === heroOptions[Math.floor(Math.random() * heroOptions.length)]) ?? cats[0];
+const astronautCat = cats.find(c => c.filename === 'neocat_astronaut.png');
+
+const featured = [
+    'neocat_cofe.png', 'neocat_laptop.png', 'neocat_bongo_up.png',
+    'neocat_blush.png', 'neocat_cool.png', 'neocat_hug.png',
+    'neocat_comfy.png', 'neocat_flag_gay.png',
+].map(fn => cats.find(c => c.filename === fn)).filter(Boolean);
+---
+
+<header>
+    <div class="header-inner">
+        <div class="logo">
+            <img src={hero.src} alt="neocat" class="logo-cat"/>
+            <span>kibty.xyz</span>
+        </div>
+        <nav>
+            <a href="#gallery">Gallery</a>
+            <a href="#facts">Cat Facts</a>
+            <a href="#about">About</a>
+        </nav>
+    </div>
+</header>
+
+<div class="fly">
+	<div class="meow-banner">MEOWWW</div>
+	<div class="fly-rows">
+		{flyingCats.map(({ cat, dur, delay }) => (
+			<div class="fly-row">
+				<img
+					src={cat!.src}
+					alt={cat!.name}
+					style={`animation-duration: ${dur}s; animation-delay: ${delay}s;`}
+				/>
+			</div>
+		))}
+	</div>
+</div>
+
+<section class="oben">
+    <div class="hero-content">
+        <div class="hero-text">
+            <div class="badge">✨ MEEEEEOOOWWWWW</div>
+            <h1>Welcome to<br/><span class="gradient-text">kibty.xyz!</span></h1>
+            <p>idk if i want to buy that domain yet</p>
+            <div class="hero-buttons">
+                <a href="#gallery" class="btn btn-primary">Browse Gallery 🐾</a>
+                <a href="#facts" class="btn btn-secondary">Cat Facts 📚</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="cat-blob"></div>
+            <img src={hero.src} alt="happy neocat" class="bigcat"/>
+            <div class="floating-badge top-right">280 emotes!</div>
+            <div class="floating-badge bottom-left">So cute! 🥺</div>
+        </div>
+    </div>
+</section>
+
+<section class="stats" hidden="hidden">
+    <div class="stats-inner">
+        <div class="stat-card">
+            <div class="stat-num">{cats.length}</div>
+            <div class="stat-label">Neocat Emotes</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Cuteness Level</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Cat Approved</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">😻</div>
+            <div class="stat-label">Happiness Score</div>
+        </div>
+    </div>
+</section>
+
+<section class="snake-section">
+    <div class="snake-label">
+        <span class="snake-title">🐍 Cat Snake</span>
+        <span class="snake-sub">CatSnake in its natural habitat</span>
+    </div>
+    <div class="snake-scroll">
+        <div class="snake-grid">
+            {snakeLayout.map(([col, row, key]) => (
+                    <img
+                            src={stretch[key]}
+                            alt={`stretch ${key}`}
+                            class="snake-piece"
+                            style={`grid-column: ${col}; grid-row: ${row};`}
+                    />
+            ))}
+        </div>
+    </div>
+</section>
+
+<!-- ===== FEATURED CATS ===== -->
+<section class="featured">
+    <div class="section-header">
+        <h2>⭐ Featured Cats</h2>
+        <p>Some of our faves!</p>
+    </div>
+    <div class="featured-grid">
+        {featured.map(cat => cat && (
+                <div class="featured-card">
+                    <img src={cat.src} alt={cat.name} loading="lazy"/>
+                    <span class="cat-label">{cat.name}</span>
+                </div>
+        ))}
+    </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section class="gallery-section" id="gallery">
+    <div class="section-header">
+        <h2>🐱 Neocat Gallery</h2>
+        <p>All {cats.length} adorable emotes in one place!</p>
+    </div>
+
+    <div class="search-wrap">
+        <label for="cat-search"></label><input
+            type="text"
+            id="cat-search"
+            placeholder="🔍 Search kibtys"
+            autocomplete="off"
+    />
+    </div>
+
+    <div class="ggrid" id="gallery-grid">
+        {cats.map(cat => (
+                <div class="cat-card" data-name={cat.name}>
+                    <img src={cat.src} alt={cat.name} loading="lazy" width="64" height="64"/>
+                    <span class="cat-name">{cat.name}</span>
+                </div>
+        ))}
+    </div>
+
+    <p class="no-results hidden" id="no-results">😿 No cats found! Try a different search.</p>
+</section>
+
+<section class="facts-section" id="facts">
+    <div class="section-header light" hidden="hidden">
+        <h2>📖 Fun Cat Facts</h2>
+        <p>Did you know…?</p>
+    </div>
+    <div class="facts-grid">
+        {catFacts.map((fact, i) => (
+                <div class="fact-card" style={`animation-delay: ${i * 0.05}s`}>
+                    <div class="fact-icon">🐾</div>
+                    <p>{fact}</p>
+                </div>
+        ))}
+    </div>
+</section>
+
+<section class="about-section" id="about">
+    <div class="about-inner">
+        <div class="about-cats">
+            {['neocat_uwu.png', 'neocat_heart.png', 'neocat_pat.png'].map(fn => {
+                const c = cats.find(x => x.filename === fn);
+                return c ? <img src={c.src} alt={c.name}/> : null;
+            })}
+        </div>
+        <div class="about-text">
+            <a href="https://volpeon.ink/emojis/neocat/" target="_blank" rel="noopener" class="btn btn-primary">View Emojis</a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-inner">
+        {astronautCat && (
+                <a class="astro-credit" href="https://astro.build/" target="_blank" rel="noopener noreferrer">
+                    <img src={astronautCat.src} alt="astronaut neocat" class="astro-credit-cat"/>
+                    <span>Made with Astro</span>
+                </a>
+        )}
+        <div class="footer-cats">
+            {['neocat_wave.png', 'neocat_blep.png', 'neocat_wink.png'].map(fn => {
+                const c = cats.find(x => x.filename === fn) ?? cats[Math.floor(Math.random() * 3)];
+                return c ? <img src={c.src} alt={c.name} class="footer-cat"/> : null;
+            })}
+        </div>
+        <p>Made with 💜 and lots of 🐾</p>
+        <p class="footer-small">Neocat emotes by <a href="https://volpeon.ink" target="_blank"
+                                                    rel="noopener">Volpeon</a> · Licensed under CC BY-NC-SA 4.0</p>
+    </div>
+</footer>
+
+<!-- ===== SEARCH SCRIPT ===== -->
+<script>
+    const searchInput = document.getElementById('cat-search') as HTMLInputElement;
+    const cards = document.querySelectorAll<HTMLElement>('.cat-card');
+    const noResults = document.getElementById('no-results');
+
+    searchInput?.addEventListener('input', () => {
+        const q = searchInput.value.toLowerCase().trim();
+        let visible = 0;
+        cards.forEach(card => {
+            const name = card.dataset.name?.toLowerCase() ?? '';
+            const show = !q || name.includes(q);
+            card.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+        noResults?.classList.toggle('hidden', visible > 0);
+    });
+</script>
+
+<style>
+    .fly {
+        position: relative;
+        height: 340px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #1e0a3c 0%, #3b1f5e 50%, #6d28d9 100%);
+    }
+
+    .meow-banner {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(4rem, 14vw, 9rem);
+        font-weight: 900;
+        letter-spacing: 0.05em;
+        background: linear-gradient(135deg, #f0abfc, #f9a8d4, #c4b5fd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        pointer-events: none;
+        user-select: none;
+        z-index: 1;
+        text-shadow: none;
+        filter: drop-shadow(0 0 40px rgba(192, 132, 252, 0.5));
+    }
+
+    .fly-rows {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 2;
+    }
+
+    .fly-row {
+        flex: 1;
+        position: relative;
+    }
+
+    .fly-row img {
+        position: absolute;
+        right: -70px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 70px;
+        height: 70px;
+        image-rendering: auto;
+        animation: fly-across 2.5s infinite linear;
+        filter: drop-shadow(0 2px 8px rgba(0,0,0,0.35));
+    }
+
+    @keyframes fly-across {
+        from {
+            transform: translateY(-50%) translateX(0) rotate(0deg);
+        }
+        to {
+            transform: translateY(calc(-50% + 60px)) translateX(calc(-100vw - 140px)) rotate(1turn);
+        }
+    }
+
+    /* ---- HEADER ---- */
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(253, 244, 255, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 2px solid #e9d5ff;
+    }
+
+    .header-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: #7c3aed;
+    }
+
+    .logo-cat {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f3e8ff;
+    }
+
+    nav {
+        display: flex;
+        gap: 8px;
+    }
+
+    nav a {
+        padding: 8px 16px;
+        border-radius: 20px;
+        text-decoration: none;
+        color: #6d28d9;
+        font-weight: 700;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    nav a:hover {
+        background: #ede9fe;
+        color: #5b21b6;
+    }
+
+    /* ---- HERO ---- */
+    .oben {
+        min-height: 50vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: linear-gradient(135deg, #fdf4ff 0%, #ede9fe 50%, #fce7f3 100%);
+        padding: 40px 24px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .hero-content {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 48px;
+        flex-wrap: wrap;
+    }
+
+    .hero-text {
+        flex: 1;
+        min-width: 280px;
+    }
+
+    .badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #f3e8ff, #fce7f3);
+        border: 2px solid #d8b4fe;
+        color: #7c3aed;
+        border-radius: 30px;
+        padding: 6px 16px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    h1 {
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 900;
+        line-height: 1.1;
+        margin: 0 0 20px;
+        color: #3b1f5e;
+    }
+
+    .gradient-text {
+        background: linear-gradient(135deg, #a855f7, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-text p {
+        font-size: 1.15rem;
+        color: #6b4f9e;
+        line-height: 1.7;
+        margin: 0 0 28px;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 800;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(168, 85, 247, 0.3);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #a855f7, #ec4899);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 14px rgba(168, 85, 247, 0.4);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: #7c3aed;
+        border: 2px solid #d8b4fe;
+    }
+
+    .hero-image {
+        flex: 1;
+        min-width: 260px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .cat-blob {
+        position: absolute;
+        width: 320px;
+        height: 320px;
+        background: linear-gradient(135deg, #f3e8ff 0%, #fce7f3 100%);
+        border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+        animation: blob-morph 6s ease-in-out infinite;
+    }
+
+    @keyframes blob-morph {
+        0%, 100% {
+            border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+        }
+        33% {
+            border-radius: 40% 60% 45% 55% / 60% 40% 60% 40%;
+        }
+        66% {
+            border-radius: 55% 45% 60% 40% / 40% 55% 45% 60%;
+        }
+    }
+
+    .bigcat {
+        position: relative;
+        z-index: 1;
+        width: 260px;
+        height: 260px;
+        object-fit: contain;
+        animation: float 3s ease-in-out infinite;
+        filter: drop-shadow(0 20px 30px rgba(168, 85, 247, 0.2));
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-12px);
+        }
+    }
+
+    .floating-badge {
+        position: absolute;
+        background: white;
+        border: 2px solid #e9d5ff;
+        border-radius: 20px;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        font-weight: 800;
+        color: #7c3aed;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        z-index: 2;
+        white-space: nowrap;
+    }
+
+    .top-right {
+        top: 10px;
+        right: 0;
+        animation: float 4s ease-in-out infinite 0.5s;
+    }
+
+    .bottom-left {
+        bottom: 10px;
+        left: 0;
+        animation: float 3.5s ease-in-out infinite 1s;
+    }
+
+    .snake-section {
+        padding: 24px 24px;
+        background: linear-gradient(135deg, #f5f3ff 0%, #fdf4ff 100%);
+        border-top: 2px solid #e9d5ff;
+        border-bottom: 2px solid #e9d5ff;
+        text-align: center;
+    }
+
+    .snake-label {
+        margin-bottom: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .snake-title {
+        font-size: 1.6rem;
+        font-weight: 900;
+        color: #3b1f5e;
+    }
+
+    .snake-sub {
+        font-size: 0.95rem;
+        color: #9061d0;
+        font-weight: 600;
+    }
+
+    .snake-scroll {
+        overflow-x: auto;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 8px;
+    }
+
+    .snake-grid {
+        display: grid;
+        grid-template-columns: repeat(10, 56px);
+        grid-template-rows: repeat(3, 56px);
+        gap: 0;
+        filter: drop-shadow(0 4px 16px rgba(124, 58, 237, 0.15));
+    }
+
+    .snake-piece {
+        width: 56px;
+        height: 56px;
+        object-fit: contain;
+        image-rendering: pixelated;
+        transition: transform 0.15s;
+    }
+
+    /* ---- STATS ---- */
+    .stats {
+        background: linear-gradient(135deg, #7c3aed, #a855f7, #ec4899);
+        padding: 40px 24px;
+    }
+
+    .stats-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 20px;
+    }
+
+    .stat-card {
+        text-align: center;
+        color: white;
+    }
+
+    .stat-num {
+        font-size: 2.5rem;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.95rem;
+        opacity: 0.85;
+        margin-top: 6px;
+        font-weight: 600;
+    }
+
+    /* ---- SECTION HEADER ---- */
+    .section-header {
+        text-align: center;
+        margin-bottom: 36px;
+    }
+
+    .section-header h2 {
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+        font-weight: 900;
+        margin: 0 0 8px;
+        color: #3b1f5e;
+    }
+
+    .section-header p {
+        color: #9061d0;
+        font-size: 1.05rem;
+        margin: 0;
+    }
+
+    .section-header.light h2 {
+        color: white;
+    }
+
+    .section-header.light p {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* ---- FEATURED ---- */
+    .featured {
+        padding: 64px 24px;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .featured-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 20px;
+    }
+
+    .featured-card {
+        background: white;
+        border: 2px solid #e9d5ff;
+        border-radius: 20px;
+        padding: 16px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        cursor: default;
+    }
+
+    .featured-card:hover {
+        transform: translateY(-6px) scale(1.05);
+        box-shadow: 0 12px 28px rgba(168, 85, 247, 0.2);
+        border-color: #c084fc;
+    }
+
+    .featured-card img {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+    }
+
+    .cat-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #7c3aed;
+        text-align: center;
+    }
+
+    /* ---- GALLERY ---- */
+    .gallery-section {
+        padding: 64px 24px;
+        background: linear-gradient(180deg, #fdf4ff 0%, #f5f3ff 100%);
+    }
+
+    .gallery-section .section-header,
+    .featured {
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .search-wrap {
+        max-width: 500px;
+        margin: 0 auto 36px;
+    }
+
+    #cat-search {
+        width: 100%;
+        padding: 14px 20px;
+        border: 2px solid #d8b4fe;
+        border-radius: 30px;
+        font-family: inherit;
+        font-size: 1rem;
+        background: white;
+        color: #3b1f5e;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #cat-search:focus {
+        border-color: #a855f7;
+        box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.12);
+    }
+
+    .ggrid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 12px;
+    }
+
+    .cat-card {
+        background: white;
+        border: 2px solid #f3e8ff;
+        border-radius: 16px;
+        padding: 10px 6px 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        cursor: default;
+        transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+
+    .cat-card:hover {
+        transform: translateY(-4px) scale(1.06);
+        box-shadow: 0 8px 20px rgba(168, 85, 247, 0.15);
+        border-color: #c084fc;
+    }
+
+    .cat-card img {
+        width: 56px;
+        height: 56px;
+        object-fit: contain;
+    }
+
+    .cat-name {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: #9061d0;
+        text-align: center;
+        word-break: break-word;
+        line-height: 1.2;
+    }
+
+    .no-results {
+        text-align: center;
+        font-size: 1.1rem;
+        color: #9061d0;
+        margin-top: 24px;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* ---- FACTS ---- */
+    .facts-section {
+        padding: 64px 24px;
+        background: linear-gradient(135deg, #6d28d9, #9333ea, #db2777);
+    }
+
+    .facts-grid {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .fact-card {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(8px);
+        border-radius: 20px;
+        padding: 24px 20px;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        color: white;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .fact-card:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+    }
+
+    .fact-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .fact-card p {
+        margin: 0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-weight: 600;
+    }
+
+    /* ---- ABOUT ---- */
+    .about-section {
+        padding: 64px 24px;
+    }
+
+    .about-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        align-items: center;
+    }
+
+    .about-cats {
+        display: flex;
+        gap: 12px;
+        flex-shrink: 0;
+    }
+
+    .about-cats img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .about-cats img:nth-child(2) {
+        animation-delay: 0.7s;
+    }
+
+    .about-cats img:nth-child(3) {
+        animation-delay: 1.4s;
+    }
+
+    .about-text {
+        flex: 1;
+        min-width: 260px;
+    }
+
+    .about-text h2 {
+        font-size: 2rem;
+        font-weight: 900;
+        margin: 0 0 16px;
+        color: #3b1f5e;
+    }
+
+    .about-text p {
+        color: #6b4f9e;
+        line-height: 1.7;
+        margin: 0 0 14px;
+        font-size: 1rem;
+    }
+
+    .about-text .btn {
+        display: inline-block;
+        margin-top: 8px;
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+        background: #1e0a3c;
+        padding: 40px 24px;
+        text-align: center;
+        color: #c4b5fd;
+    }
+
+    .footer-inner {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .astro-credit {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        margin-bottom: 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        color: #f3e8ff;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(216, 180, 254, 0.35);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+        transition: transform 0.15s, background 0.15s, border-color 0.15s;
+    }
+
+    .astro-credit:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(216, 180, 254, 0.65);
+        color: white;
+    }
+
+    .astro-credit-cat {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+
+    .astro-credit span {
+        font-weight: 800;
+        letter-spacing: 0.01em;
+    }
+
+    .footer-cats {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .footer-cat {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+        opacity: 0.9;
+        filter: brightness(0.9) saturate(0.8);
+        animation: float 3.5s ease-in-out infinite;
+    }
+
+    .footer-cat:nth-child(2) {
+        animation-delay: 0.5s;
+    }
+
+    .footer-cat:nth-child(3) {
+        animation-delay: 1s;
+    }
+
+    footer p {
+        margin: 6px 0;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    footer a {
+        color: #d8b4fe;
+    }
+
+    footer a:hover {
+        color: #f3e8ff;
+    }
+
+    .footer-small {
+        font-size: 0.8rem;
+        font-weight: 600;
+        opacity: 0.7;
+    }
+
+    @media (max-width: 640px) {
+        .oben {
+            padding-top: 40px;
+        }
+
+        .hero-content {
+            gap: 32px;
+        }
+
+        .bigcat {
+            width: 200px;
+            height: 200px;
+        }
+
+        .cat-blob {
+            width: 240px;
+            height: 240px;
+        }
+
+        .floating-badge {
+            display: none;
+        }
+
+        nav a {
+            padding: 6px 10px;
+            font-size: 0.9rem;
+        }
+
+        .ggrid {
+            grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+            gap: 8px;
+        }
+    }
+</style>
