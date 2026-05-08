@@ -63,6 +63,38 @@ const heroOptions = ['neocat_happy.png', 'neocat_heart.png', 'neocat_uwu.png', '
 const hero = cats.find(c => c.filename === heroOptions[Math.floor(Math.random() * heroOptions.length)]) ?? cats[0];
 const astronautCat = cats.find(c => c.filename === 'neocat_astronaut.png');
 
+// Random side cats
+const sideCatCount = 5;
+const leftCats = [];
+const leftPositions = [];
+const leftRotations = [];
+const leftOffsets = [];
+for (let i = 0; i < sideCatCount; i++) {
+    leftCats.push(cats[Math.floor(Math.random() * cats.length)]);
+    let pos;
+    do {
+        pos = Math.random() * 80 + 10; // 10vh to 90vh
+    } while (leftPositions.some(p => Math.abs(p - pos) < 15)); // at least 15vh apart
+    leftPositions.push(pos);
+    leftRotations.push(Math.random() * 360);
+    leftOffsets.push(Math.random() * 20 + 5); // 5px to 25px from edge
+}
+
+const rightCats = [];
+const rightPositions = [];
+const rightRotations = [];
+const rightOffsets = [];
+for (let i = 0; i < sideCatCount; i++) {
+    rightCats.push(cats[Math.floor(Math.random() * cats.length)]);
+    let pos;
+    do {
+        pos = Math.random() * 80 + 10; // 10vh to 90vh
+    } while (rightPositions.some(p => Math.abs(p - pos) < 15)); // at least 15vh apart
+    rightPositions.push(pos);
+    rightRotations.push(Math.random() * 360);
+    rightOffsets.push(Math.random() * 20 + 5); // 5px to 25px from edge
+}
+
 const featured = [
     'neocat_cofe.png', 'neocat_laptop.png', 'neocat_bongo_up.png',
     'neocat_blush.png', 'neocat_cool.png', 'neocat_hug.png',
@@ -83,6 +115,18 @@ const featured = [
         </nav>
     </div>
 </header>
+
+<!-- Side cats -->
+<div class="side-cats left">
+	{leftCats.map((cat, i) => (
+		<img src={cat.src} alt={cat.name} style={`top: ${leftPositions[i]}vh; left: ${leftOffsets[i]}px; transform: rotate(${leftRotations[i]}deg);`} />
+	))}
+</div>
+<div class="side-cats right">
+	{rightCats.map((cat, i) => (
+		<img src={cat.src} alt={cat.name} style={`top: ${rightPositions[i]}vh; right: ${rightOffsets[i]}px; transform: rotate(${rightRotations[i]}deg);`} />
+	))}
+</div>
 
 <div class="fly">
 	<div class="meow-banner">MEOWWW</div>
@@ -252,7 +296,6 @@ const featured = [
     </div>
 </footer>
 
-<!-- ===== SEARCH SCRIPT ===== -->
 <script>
     const searchInput = document.getElementById('cat-search') as HTMLInputElement;
     const cards = document.querySelectorAll<HTMLElement>('.cat-card');
@@ -1027,5 +1070,35 @@ const featured = [
             grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
             gap: 8px;
         }
+    }
+
+    /* Side cats */
+    .side-cats {
+        position: fixed;
+        top: 0;
+        z-index: 50;
+        width: 80px;
+        pointer-events: none;
+    }
+
+    .side-cats.left {
+        left: 0;
+    }
+
+    .side-cats.right {
+        right: 0;
+    }
+
+    .side-cats img {
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        opacity: 0.7;
+        transition: opacity 0.3s;
+        transform-origin: center;
+    }
+
+    .side-cats img:hover {
+        opacity: 1;
     }
 </style>
